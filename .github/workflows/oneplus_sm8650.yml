@@ -21,6 +21,26 @@ on:
         description: "启用KPM"
         required: false
         default: false
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📊 Check disk space (检查磁盘空间)
+        run: |
+          echo "构建前磁盘空间："
+          df -h
+
+      - name: ⚙️ Set REPO_MANIFEST (设置对应机型配置文件)
+        id: set_manifest
+        run: |
+          # For scheduled runs, default to oneplus_ace5 with both features enabled
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "REPO_MANIFEST=oneplus_ace5" >> $GITHUB_ENV
+            echo "DEVICES_NAME=oneplus_ace5" >> $GITHUB_ENV
+         
 
 jobs:
   build:
